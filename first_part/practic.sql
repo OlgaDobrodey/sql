@@ -120,3 +120,13 @@ WHERE id = (SELECT author_id
 DELETE
 FROM author
 WHERE id = (4);
+
+
+----
+SELECT title,count_page,(SELECT max(count_page)FROM book) max, (SELECT avg(count_page) FROM book) avh
+FROM book
+WHERE (SELECT avg(count_page) FROM book)  > count_page;
+
+select title,count_page, max(count_page), avg(count_page)
+from book
+group by title, count_page;
