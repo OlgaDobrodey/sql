@@ -1,33 +1,107 @@
-INSERT INTO company(id, name, date)
-VALUES (1, 'Apple', '2001-01-01'),
-       (2, 'Google', '2012-01-03'),
-       (3, 'Facebook', '2002-10-22');
+select * from employee_contact;
+select * from employee;
+select * from company;
+select * from contact;
 
-insert into company(id, name, date)
-values (4, 'Amazon','2001-10-02');
+select first_name, last_name, (select name from company c  where company_id = c.id), company_id
+from employee;
 
-insert into contact (number, type)
-values ('234-56-78', 'домашний'),
-       ('987-65-43', 'рабочий'),
-       ('565-25-91', 'мобильный'),
-       ('332-55-67', NULL),
-       ('465-11-22', NULL);
+select e.first_name, e.last_name, c.name
+from employee e, company c
+where e.company_id = c.id;
 
-insert into employee(first_name, last_name, salary, company_id)
-values ('Ivan', 'Ivanov', 1000,1),
-       ('Petr', 'Petrov', 2000,2),
-       ('Sveta', 'Ivanov', 1500,3),
-       ('Olga', 'Dobrodey', 1000,1),
-       ('Arni', 'Paramonov', Null,2)
+--inner join
+
+select e.first_name, e.last_name, c.name, concat(ct.number,' ',ct.type) number
+from employee e
+         join company c
+              on e.company_id = c.id
+         join employee_contact ec on e.id = ec.employee_id
+         join contact ct on ec.contact_id = ct.id
 ;
 
-insert into employee(first_name, last_name, company_id, salary)
-values ('Oleg', 'Vanin', null, 1000);
+-- Ivan,Ivanov,Apple,234-56-78 домашний
+-- Ivan,Ivanov,Apple,987-65-43 рабочий
+-- Petr,Petrov,Google,987-65-43 рабочий
+-- Petr,Petrov,Google,565-25-91 мобильный
+-- Sveta,Ivanov,Facebook,332-55-67
+-- Olga,Dobrodey,Apple,465-11-22
 
-insert into employee_contact (employee_id, contact_id)
-values (1, 1),
-       (1, 2),
-       (2, 2),
-       (2, 3),
-       (3, 4),
-       (4, 5);
+-- =============================================================
+--cross join --analog decardo mul
+
+select e.first_name, e.last_name, c.name
+from employee e
+         cross join company c;
+
+--  Ivan,Ivanov,Apple
+-- Petr,Petrov,Apple
+-- Sveta,Ivanov,Apple
+-- Olga,Dobrodey,Apple
+-- Arni,Paramonov,Apple
+-- Ivan,Ivanov,Google
+-- Petr,Petrov,Google
+-- Sveta,Ivanov,Google
+-- Olga,Dobrodey,Google
+-- Arni,Paramonov,Google
+-- Ivan,Ivanov,Facebook
+-- Petr,Petrov,Facebook
+-- Sveta,Ivanov,Facebook
+-- Olga,Dobrodey,Facebook
+-- Arni,Paramonov,Facebook
+-- =============================================================
+--left outer join
+
+select e.first_name, e.last_name, c.name
+from company c
+         left join employee e on e.company_id = c.id;
+
+-- Ivan,Ivanov,Apple
+-- Petr,Petrov,Google
+-- Sveta,Ivanov,Facebook
+-- Olga,Dobrodey,Apple
+-- Arni,Paramonov,Google
+-- NUll,NUll,Amazon
+
+
+select e.first_name, e.last_name, c.name
+from employee e
+         left join company c on e.company_id = c.id;
+
+--
+-- Ivan,Ivanov,Apple
+-- Petr,Petrov,Google
+-- Sveta,Ivanov,Facebook
+-- Olga,Dobrodey,Apple
+-- Arni,Paramonov,Google
+-- Oleg,Vanin, null
+
+-- =============================================================
+--right outer join
+
+select e.first_name, e.last_name, c.name
+from employee e
+         right join company c on e.company_id = c.id;
+
+-- Ivan,Ivanov,Apple
+-- Petr,Petrov,Google
+-- Sveta,Ivanov,Facebook
+-- Olga,Dobrodey,Apple
+-- Arni,Paramonov,Google
+-- NUll,NUll,Amazon
+
+-- =============================================================
+--full outer join
+
+select e.first_name, e.last_name, c.name
+from employee e
+         full join company c on e.company_id = c.id;
+
+
+-- Ivan,Ivanov,Apple
+-- Petr,Petrov,Google
+-- Sveta,Ivanov,Facebook
+-- Olga,Dobrodey,Apple
+-- Arni,Paramonov,Google
+-- Oleg,Vanin,NULL
+-- NULL,NULL,Amazon
