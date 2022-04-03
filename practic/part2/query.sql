@@ -55,7 +55,19 @@ where aircraft_id = 1
         where f.flight_no = 'MN3002'
           and f.departure_date::date = '2020-06-14'
           and s.seat_no = t.seat_no);
+-- Сколько мест осталось незанятыми 2020-06-14 на рейсе MN3002?
+-- 3 вариант
 
+
+select aircraft_id, seat_no
+from seat
+where aircraft_id = 1
+except
+select f.aircraft_id, t.seat_no
+from ticket t
+         join flight f on f.id = t.flight_id
+where f.flight_no = 'MN3002'
+  and f.departure_date::date = '2020-06-14';
 
 -- Какие 2 перелета были самые длительные за все время?
 
@@ -155,6 +167,9 @@ from(select t.flight_id, sum(cost)
      group by t.flight_id
      order by 2 desc) t1
 ORDER BY t1.sum desc;
+
+
+
 
 
 
