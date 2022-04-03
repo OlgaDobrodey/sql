@@ -26,3 +26,4 @@ select *
 from ticket
 where seat_no = 'A1';  --full scan
 --8 rows retrieved starting from 1 in 53 ms
+
