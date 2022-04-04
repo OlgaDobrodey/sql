@@ -1,20 +1,3 @@
-create table test1
-(
-    id      SERIAL PRIMARY KEY,
-    number1 int         NOT NULL,
-    number2 int         NOT NULL,
-    value   VARCHAR(32) NOT NULL
-);
-
-INSERT INTO test1(number1, number2, value)
-select random() * generate_series,
-       random() * generate_series,
-       generate_series
-from generate_series(1, 100000);
-
-CREATE INDEX test1_number1_idx ON test1 (number1);
-CREATE INDEX test1_number2_idx ON test1 (number2);
-
 select relname, reltuples, relkind, relpages
 from flight_repository.pg_catalog.pg_class
 where relname like 'test1%';
